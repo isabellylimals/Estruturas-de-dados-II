@@ -27,8 +27,8 @@ void add_node(long long id, const char *name, int new_id) {
     node_count++;
 }
 
-void read_nodes(const char *filename) {
-    FILE *file = fopen(filename, "r");
+void read_nodes(const char *fb_famososnodes) {
+    FILE *file = fopen(fb_famososnodes, "r");
     if (!file) {
         perror("Erro ao abrir o arquivo de nós");
         return;
@@ -42,7 +42,7 @@ void read_nodes(const char *filename) {
         int new_id;
         char name[MAX_NAME_LENGTH];
 
-        sscanf(line, "%lld %s %d", &id, name, &new_id);
+        sscanf(line, "%lld,%[^,],%d", &id, name, &new_id);
         add_node(id, name, new_id);
     }
 
@@ -66,8 +66,8 @@ void add_edge(Graph *graph, int u, int v) {
     graph->adjacency_list[graph->size++] = v;
 }
 
-void read_edges(Graph *graph, const char *filename) {
-    FILE *file = fopen(filename, "r");
+void read_edges(Graph *graph, const char *fb_famososedges) {
+    FILE *file = fopen(fb_famososedges, "r");
     if (!file) {
         perror("Erro ao abrir o arquivo de arestas");
         return;
@@ -96,10 +96,10 @@ int bfs(Graph *graph, int start, int end) {
     while (front < rear) {
         int size = rear - front;
         distance++;
-        int i;
-        for ( i = 0; i < size; i++) {
+    int i, j ;
+        for (i = 0; i < size; i++) {
             int node = queue[front++];
-            int j;
+
             for ( j = 0; j < graph->size; j++) {
                 if (graph->adjacency_list[j] == node) {
                     int neighbor = graph->adjacency_list[j + 1];
@@ -119,7 +119,7 @@ int bfs(Graph *graph, int start, int end) {
 
 int find_node_by_name(const char *name) {
     int i;
-    for (i = 0; i < node_count; i++) {
+    for ( i = 0; i < node_count; i++) {
         if (strcmp(nodes[i].name, name) == 0) {
             return nodes[i].new_id;
         }
